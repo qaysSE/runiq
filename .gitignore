@@ -1,0 +1,6 @@
+runiq
+runiq-mcp
+bin/
+.DS_Store
+.runiq-agent-profile/
+*.log
