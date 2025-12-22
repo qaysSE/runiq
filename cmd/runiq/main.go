@@ -6,16 +6,18 @@ import (
 	"fmt"
 	"os"
 	
-	// Import our new modular packages
+	"runiq/pkg/engine" // Import Engine to close browser
 	"runiq/pkg/server"
 )
 
 func main() {
-	// standard input loop (MCP Protocol)
+	// 1. Ensure Browser Closes when Runiq exits
+	defer engine.CloseBrowser()
+
 	scanner := bufio.NewScanner(os.Stdin)
 	
-	// Increase buffer size for large JSON payloads (like screenshots)
-	const maxCapacity = 10 * 1024 * 1024 // 10MB
+	// Increase buffer for images
+	const maxCapacity = 10 * 1024 * 1024 
 	buf := make([]byte, maxCapacity)
 	scanner.Buffer(buf, maxCapacity)
 
@@ -25,7 +27,6 @@ func main() {
 			continue
 		}
 
-		// Hand off to the Server Package
 		if res := server.HandleRequest(req); res != nil {
 			bytes, _ := json.Marshal(res)
 			fmt.Println(string(bytes))
